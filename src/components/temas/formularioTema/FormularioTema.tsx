@@ -11,17 +11,17 @@ import Tema from "../../../models/Tema";
 
 function FormularioTema() {
 
-  const navigate = useNavigate();
+    const navigate = useNavigate();
 
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [tema, setTema] = useState<Tema>({} as Tema);
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [tema, setTema] = useState<Tema>({} as Tema);
 
-  const {id} = useParams<{ id: string }>();
+    const {id} = useParams<{ id: string }>();
 
-  const { usuario, handleLogout } = useContext(AuthContext);
-  const token = usuario.token;
+    const { usuario, handleLogout } = useContext(AuthContext);
+    const token = usuario.token;
 
-  async function buscarPorId(id: string) {
+    async function buscarPorId(id: string) {
     try {
         await buscar(`/tema/${id}`, setTema, {
             headers: {
@@ -34,27 +34,27 @@ function FormularioTema() {
             handleLogout()
         }
     }
-  }
+    }
 
-  useEffect(() => {
+    useEffect(() => {
     if (token === '') {
         alert('Você precisa estar logado');
         navigate('/login');
     }
-  }, [token]);
+    }, [token]);
 
-  useEffect(() => {
-      if (id !== undefined) {
-          buscarPorId(id)
-      }
-  }, [id])
+    useEffect(() => {
+        if (id !== undefined) {
+            buscarPorId(id)
+        }
+    }, [id])
 
-  function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
+    function atualizarEstado(e: ChangeEvent<HTMLInputElement>) {
     setTema({
         ...tema,
         [e.target.name]: e.target.value
     })
-  }
+    }
 
   async function gerarNovoTema(e: ChangeEvent<HTMLFormElement>) {
     e.preventDefault()

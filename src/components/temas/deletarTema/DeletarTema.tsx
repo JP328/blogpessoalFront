@@ -9,67 +9,67 @@ import { RotatingLines } from "react-loader-spinner"
 
 function DeletarTema() {
 
-  const navigate = useNavigate()
+    const navigate = useNavigate()
 
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [tema, setTema] = useState<Tema>({} as Tema)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [tema, setTema] = useState<Tema>({} as Tema)
 
-  const { id } = useParams<{ id: string }>()
+    const { id } = useParams<{ id: string }>()
 
-  const { usuario, handleLogout } = useContext(AuthContext)
-  const token = usuario.token
+    const { usuario, handleLogout } = useContext(AuthContext)
+    const token = usuario.token
 
-  async function buscarPorId(id: string) {
-    try {
-        await buscar(`/tema/${id}`, setTema, {
-            headers: {
-                'Authorization': token
+    async function buscarPorId(id: string) {
+        try {
+            await buscar(`/tema/${id}`, setTema, {
+                headers: {
+                    'Authorization': token
+                }
+            })
+        } catch (error: any) {
+            if (error.toString().includes('403')) {
+                alert('O token expirou, favor logar novamente')
+                handleLogout()
             }
-        })
-    } catch (error: any) {
-        if (error.toString().includes('403')) {
-            alert('O token expirou, favor logar novamente')
-            handleLogout()
         }
     }
-}
 
-useEffect(() => {
-    if (token === '') {
-        alert('Você precisa estar logado')
-        navigate('/login')
+    useEffect(() => {
+        if (token === '') {
+            alert('Você precisa estar logado')
+            navigate('/login')
+        }
+    }, [token])
+
+    useEffect(() => {
+        if (id !== undefined) {
+            buscarPorId(id)
+        }
+    }, [id])
+
+    async function deletarTema() {
+        setIsLoading(true)
+
+        try {
+            await deletar(`/tema/${id}`, {
+                headers: {
+                    'Authorization': token
+                }
+            })
+
+            alert('Tema apagado com sucesso')
+
+        } catch (error) {
+            alert('Erro ao apagar o Tema')
+        }
+
+        setIsLoading(false)
+        retornar()
     }
-}, [token])
 
-useEffect(() => {
-    if (id !== undefined) {
-        buscarPorId(id)
+    function retornar() {
+        navigate("/temas")
     }
-}, [id])
-
-async function deletarTema() {
-    setIsLoading(true)
-
-    try {
-        await deletar(`/tema/${id}`, {
-            headers: {
-                'Authorization': token
-            }
-        })
-
-        alert('Tema apagado com sucesso')
-
-    } catch (error) {
-        alert('Erro ao apagar o Tema')
-    }
-
-    setIsLoading(false)
-    retornar()
-  }
-
-  function retornar() {
-      navigate("/temas")
-  }
 
   return (
     <div className='container w-1/3 mx-auto'>
