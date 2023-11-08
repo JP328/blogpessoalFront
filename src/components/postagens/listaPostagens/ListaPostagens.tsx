@@ -6,6 +6,7 @@ import Postagem from "../../../models/Postagem";
 import { AuthContext } from "../../../contexts/AuthContext";
 import { buscar } from "../../../services/Service";
 import { ProgressBar } from "react-loader-spinner";
+import { toastAlerta } from "../../../utils/ToastAlert";
 
 function ListaPostagens() {
 
@@ -26,7 +27,7 @@ function ListaPostagens() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
           if (error.toString().includes('403')) {
-              alert('O token expirou, favor logar novamente')
+              toastAlerta('O token expirou, favor logar novamente', 'erro')
               handleLogout()
           }
       }
@@ -34,7 +35,7 @@ function ListaPostagens() {
 
   useEffect(() => {
     if (token === '') {
-        alert('Você precisa estar logado')
+        toastAlerta('Você precisa estar logado', 'info')
         navigate('/');
     }
   }, [token])

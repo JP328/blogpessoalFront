@@ -9,6 +9,7 @@ import Tema from "../../../models/Tema";
 import { buscar } from "../../../services/Service";
 import { AuthContext } from "../../../contexts/AuthContext";
 import { InfinitySpin } from "react-loader-spinner";
+import { toastAlerta } from "../../../utils/ToastAlert";
 
 function ListaTemas() {
 
@@ -26,7 +27,7 @@ function ListaTemas() {
             })
         } catch (error: any) {
             if (error.toString().includes('403')) {
-                alert('O token expirou, favor logar novamente')
+                toastAlerta('O token expirou, favor logar novamente', 'erro')
                 handleLogout()
             }
         }
@@ -34,7 +35,7 @@ function ListaTemas() {
 
     useEffect(() => {
         if (token === '') {
-            alert('Você precisa estar logado');
+            toastAlerta('Você precisa estar logado', 'sucesso');
             navigate('/login');
             }
     }, [navigate, token])
@@ -48,12 +49,7 @@ function ListaTemas() {
             {temas.length === 0 && (
                 <InfinitySpin
                     color="#1B4965"
-                    // visible={true}
-                    // height="200"
                     width="200"
-                    // ariaLabel="dna-loading"
-                    // wrapperStyle={{}}
-                    // wrapperClass="dna-wrapper mx-auto"
                 />
             )}
 
